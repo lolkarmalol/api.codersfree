@@ -25,3 +25,4 @@ Route::resource('posts', PostController::class);
 Route::resource('categories', CategoryController::class);
 Route::resource('tags', TagController::class);
 Route::resource('images', ImageController::class);
+
