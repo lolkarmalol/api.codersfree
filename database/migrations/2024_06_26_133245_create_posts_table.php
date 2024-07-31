@@ -5,36 +5,44 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreatePostsTable extends Migration
 {
     /**
      * Run the migrations.
+     *
+     * @return void
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+
             $table->string('name');
-            $table->string('slug');
-            $table->string('extract');
-            $table->text('body');
+            $table->string('slug')->unique();
+            $table->text('extract');
+            $table->longText('body');
+
+            $table->enum('status',[Post::BOORADOR,post::PUBLICADO])->default(Post::BOORADOR)->nullable();
+
             $table->unsignedBigInteger('category_id');
-            $table->unsignedBigInteger('user_id');
-
-
-            $table->enum('status',[Post::BOORADOR, Post::PUBLICADO])->default(Post::BOORADOR)->nullable();
-
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+
+            //$table->foreignId('category_id')->constrained(); //sintaxis mas simple si se siguen las convenciones
+
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->timestamps();
         });
     }
 
     /**
      * Reverse the migrations.
+     *
+     * @return void
      */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('posts');
     }
-};
+}
